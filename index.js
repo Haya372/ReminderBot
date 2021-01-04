@@ -1,25 +1,42 @@
+// .envの読み込み
 require('dotenv').config();
 
-// -----------------------------------------------------------------------------
-// モジュールのインポート
 const server = require("express")();
-const line = require("@line/bot-sdk"); // Messaging APIのSDKをインポート
+const line = require("@line/bot-sdk");
 
-// -----------------------------------------------------------------------------
-// パラメータ設定
 const line_config = {
-    channelAccessToken: process.env.LINE_ACCESS_TOKEN, // 環境変数からアクセストークンをセットしています
-    channelSecret: process.env.LINE_CHANNEL_SECRET // 環境変数からChannel Secretをセットしています
+    channelAccessToken: process.env.LINE_ACCESS_TOKEN,
+    channelSecret: process.env.LINE_CHANNEL_SECRET
 };
 
-// -----------------------------------------------------------------------------
-// Webサーバー設定
+const bot = new line.Client(line_config);
+
+const remindFumc = require("./remindFunc");
+
 server.listen(process.env.PORT || 3000);
 
-
-// -----------------------------------------------------------------------------
-// ルーター設定
 server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     res.sendStatus(200);
-    console.log(req.body);
+    req.body.events.forEach(function(event){
+        // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
+        if (event.type == "message" && event.message.type == "text"){
+            var time = remindFumc.isEnable(event.message.text);
+            console.log(time);
+            if (time != -1){
+                console.log("recieve")
+                setTimeout(function(){
+                    bot.replyMessage(event.replyToken, {
+                        type: "text",
+                        text: "時間です！"
+                    });
+                    console.log("send");
+                }, time);
+            }else{
+                bot.replyMessage(event.replyToken, {
+                    type: "text",
+                    text: "入力形式が間違っています。"
+                });
+            }
+        }
+    });
 });
