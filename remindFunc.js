@@ -1,4 +1,4 @@
-const isEnable = function(text){
+const calcTime = function(text){
     var chars = text.split('');
     var num = 0;
     var res = 0;
@@ -27,5 +27,5 @@ const isEnable = function(text){
 }
 
 module.exports = {
-    isEnable,
+    calcTime,
 }

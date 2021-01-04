@@ -20,8 +20,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach(function(event){
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text"){
-            var time = remindFumc.isEnable(event.message.text);
-            console.log(time);
+            var time = remindFumc.calcTime(event.message.text);
             if (time != -1){
                 console.log("recieve")
                 setTimeout(function(){
