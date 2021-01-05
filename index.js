@@ -20,21 +20,41 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach(function(event){
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text"){
-            var time = remindFumc.calcTime(event.message.text);
-            if (time != -1){
-                console.log("recieve")
-                setTimeout(function(){
+            var text = event.message.text
+            if(!text.includes(':')){
+                var time = remindFumc.calcTime(text);
+                if (time != -1){
+                    console.log("set: timer");
+                    setTimeout(function(){
+                        bot.replyMessage(event.replyToken, {
+                            type: "text",
+                            text: "時間です！"
+                        });
+                        console.log("time out: timer");
+                    }, time);
+                }else{
                     bot.replyMessage(event.replyToken, {
                         type: "text",
-                        text: "時間です！"
+                        text: "入力形式が間違っています。"
                     });
-                    console.log("send");
-                }, time);
+                }
             }else{
-                bot.replyMessage(event.replyToken, {
-                    type: "text",
-                    text: "入力形式が間違っています。"
-                });
+                var time = remindFumc.getAlermTime(text);
+                if(time != -1){
+                    console.log("set: alerm");
+                    setTimeout(function(){
+                        bot.replyMessage(event.replyToken, {
+                            type: "text",
+                            text: "時間です！"
+                        });
+                        console.log("time out: alerm");
+                    }, time);
+                }else{
+                    bot.replyMessage(event.replyToken, {
+                        type: "text",
+                        text: "入力形式が間違っています。"
+                    });
+                }
             }
         }
     });
