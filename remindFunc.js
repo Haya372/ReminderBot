@@ -1,3 +1,5 @@
+//タイマーの時間を計算する
+//入力が不適切な場合-1を返す
 const calcTime = function(text){
     var chars = text.split('');
     var num = 0;
@@ -34,6 +36,8 @@ const calcTime = function(text){
     return res;
 }
 
+//アラームの時間を計算する
+//入力が不適切な場合-1を返す
 const getAlermTime = function(text){
     var chars = text.split(':');
     var now = new Date();
