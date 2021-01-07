@@ -55,7 +55,6 @@ const getAlermTime = function(text){
         alerm_hour--;
     }
     if(alerm_hour < 0) alerm_hour += 24;
-    console.log(alerm_hour + ":" + alerm_minute);
     return alerm_hour * 1000 * 60 * 60 + alerm_minute * 1000 * 60;
 }
 

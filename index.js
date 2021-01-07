@@ -69,8 +69,12 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                         var time = remindFumc.calcTime(text);
                         if (time != -1){
                             console.log("set: timer");
+                            bot.replyMessage(event.replyToken, {
+                                type: "text",
+                                text: text + "後にタイマーをセットしました。"
+                            });
                             setTimeout(function(){
-                                bot.replyMessage(event.replyToken, {
+                                bot.pushMessage(userID, {
                                     type: "text",
                                     text: "時間です！"
                                 });
@@ -87,8 +91,12 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                         var time = remindFumc.getAlermTime(text);
                         if(time != -1){
                             console.log("set: alerm");
+                            bot.replyMessage(event.replyToken, {
+                                type: "text",
+                                text: text + "にアラームをセットしました。"
+                            });
                             setTimeout(function(){
-                                bot.replyMessage(event.replyToken, {
+                                bot.pushMessage(userID, {
                                     type: "text",
                                     text: "時間です！"
                                 });
