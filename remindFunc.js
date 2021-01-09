@@ -43,6 +43,7 @@ const getAlermTime = function(text){
     var now = new Date();
     var now_hour = now.getHours();
     var now_minute = now.getMinutes();
+    var now_second = now.getSeconds();
     if(chars.length != 2) return -1;
     var alerm_hour = parseInt(chars[0], 10);
     var alerm_minute = parseInt(chars[1], 10);
@@ -54,8 +55,9 @@ const getAlermTime = function(text){
         alerm_minute += 60;
         alerm_hour--;
     }
-    if(alerm_hour < 0) alerm_hour += 24;
-    return alerm_hour * 1000 * 60 * 60 + alerm_minute * 1000 * 60;
+    if(alerm_hour < 0 || (alerm_hour === 0 && alerm_minute === 0)) alerm_hour += 24;
+    var res = alerm_hour * 1000 * 60 * 60 + alerm_minute * 1000 * 60 - now_second * 1000;
+    return res;
 }
 
 module.exports = {
